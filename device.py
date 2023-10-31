@@ -17,7 +17,6 @@ def send(l:list, port:int, router:int):
 
 def recv(port:int):
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-        print(port, type(port))
         s.bind(("127.0.0.1", port))
         while True:
             try:
@@ -35,7 +34,6 @@ def main():
     parser.add_argument("-l", "--list", nargs="*", default=[40001, 40002, 40003, 40004, 40005, 40006, 40007, 40008], help="port to send")
 
     args = parser.parse_args()
-    print(args.list, args.port, args.router)
 
     t=threading.Thread(target=recv, args=[args.port])
     t.start()

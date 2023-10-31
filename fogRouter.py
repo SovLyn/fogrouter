@@ -49,8 +49,10 @@ class FogRouter:
     def allow(self, src:str, dst:str) -> bool:
         self.seen.add(src)
         self.seen.add(dst)
-        src = self.devicesList[src] if src in self.devicesList else "other"
-        dst = self.devicesList[dst] if dst in self.devicesList else "other"
+        feather=(src if src in self.devicesList else "other")+"-"+(dst if dst in self.devicesList else "other")
+        if feather in self.buffer:return self.buffer[feather]
+        src = self.devicesList[src] if src in self.devicesList else None
+        dst = self.devicesList[dst] if dst in self.devicesList else None
 
         result=None
         for i in sorted(self.activated.keys(), reverse=True):
@@ -60,6 +62,7 @@ class FogRouter:
                     else :result=rule.allow
             #print(rule, result)
             if result is not None:break
+        self.buffer[feather]=result
         return result
     
     def __str__(self):
