@@ -3,13 +3,16 @@ from time import sleep
 import socket
 import argparse
 import threading
+import random
 
 def send(l:list, port:int, router:int):
     try:
         while True:
             for dst in l:
                 if dst==port:continue
-                pkt=scapy.IP(dst="127.0.0.1")/scapy.UDP(sport=port, dport=router)/scapy.UDP(sport=port, dport=dst)/scapy.Raw("message from normal device.correct message")
+                pkt=scapy.IP(dst="127.0.0.1")/scapy.UDP(sport=port, dport=router)/scapy.UDP(sport=port, dport=dst)/scapy.Raw("message from malicious device.correct message")
+                scapy.send(pkt, verbose=False)
+                pkt=scapy.IP(dst="127.0.0.1")/scapy.UDP(sport=port, dport=router)/scapy.UDP(sport=port+1, dport=dst)/scapy.Raw("message from malicious device.fake message")
                 scapy.send(pkt, verbose=False)
                 sleep(0.2)
     except KeyboardInterrupt:
